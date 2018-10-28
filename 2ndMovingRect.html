@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html>
+<canvas id="move"> </canvas>
+
+<script>
+const canvas = document.getElementById("move");
+canvas.width=500;
+canvas.height=350;
+const context = canvas.getContext("2d");
+   context.fillStyle = "white";
+context.fillRect(0, 0, canvas.width, canvas.height);
+ 
+const rand = function(num) {
+  return Math.floor(Math.random() * num) + 1;
+};
+   
+ createBoxes = function (count, canvasWidth, canvasHeight){
+  const colorArray =["Pink","Blue","Aqua","Purple","CornflowerBlue","black"];
+  const box=[];
+  for(i=0; i<count; i++) {
+             box[i]={
+          x: rand(canvasWidth-25),
+          y: rand(canvasHeight-35),
+          width: 25,
+          height: 25,
+          xDelta: rand(7),
+          yDelta: rand(7),
+          color: colorArray[rand(6)-1],
+          draw: function() {
+              context.fillStyle = this.color;
+              context.fillRect(this.x, this.y, this.width, this.height);
+          },
+          update: function() {
+            this.x+=this.xDelta;
+            this.y+=this.yDelta;
+            if (this.x>canvasWidth-25||this.x<0){
+              this.xDelta=this.xDelta*-1;
+              this.color=colorArray[rand(6)-1];
+              }
+            if(this.y>canvasHeight-25||this.y<0){
+              this.yDelta=this.yDelta*-1;
+              this.color=colorArray[rand(6)-1];
+            }
+          } 
+                 
+      }
+   }
+     return box;
+};
+
+const group = createBoxes(9, canvas.width, canvas.height);
+
+const draw = function(){
+
+  context.strokeStyle= "pink";
+  context.lineWidth=9;
+ 	context.strokeRect  (0,0,canvas.width,canvas.height);
+  context.fillStyle= 'white';
+  context.fillRect(0,0,canvas.width,canvas.height);
+  
+ context.strokeRect  (0,0,canvas.width,canvas.height);
+ for(i=0; i<group.length; i++){
+  group[i].draw();
+ }
+ 
+};
+
+const update = function() {
+for(i=0; i<group.length; i++){
+ group[i].update();
+}
+ };
+
+const loop = function(){
+draw();
+  update();
+  requestAnimationFrame(loop);
+};
+
+
+loop();
+
+</script>  
+ </html>
